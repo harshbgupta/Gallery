@@ -1,8 +1,10 @@
 package corporation.hell.gallery;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.MediaStore.MediaColumns;
@@ -36,11 +38,13 @@ public class MainActivity extends AppCompatActivity {
         //Setting Click
         gallery.setOnItemClickListener(new OnItemClickListener() {
 
+            @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1,
                                     int position, long arg3) {
-                if (null != images && !images.isEmpty())
-                    Toast.makeText(getApplicationContext(),"Images selectd of " + position,Toast.LENGTH_SHORT).show();
+                if (null != images && !images.isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "Images selectd of " + position, Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -85,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
                 picturesView.setScaleType(ImageView.ScaleType.FIT_CENTER);
                 picturesView
                         .setLayoutParams(new GridView.LayoutParams(270, 270));
+                picturesView.setPadding(10,10,10,10);
 
             } else {
                 picturesView = (ImageView) convertView;
