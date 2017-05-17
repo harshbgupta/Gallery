@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    // Swarup added
+    // harsh added
     public View getGridViewItemByPosition(int position, GridView gridView) {
         final int firstListItemPosition = gridView.getFirstVisiblePosition();
         final int lastListItemPosition = firstListItemPosition + gridView.getChildCount() - 1;
@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
                                         int position, long arg3) {
                     if (null != images && !images.isEmpty()) {
                         Toast.makeText(getApplicationContext(), "Images selectd of " + position, Toast.LENGTH_SHORT).show();
-                        // Swarup added
+                        // Harsh added
                         View view = getGridViewItemByPosition(position, gallery);
                         view.setBackgroundColor(Color.BLUE);
                     }
