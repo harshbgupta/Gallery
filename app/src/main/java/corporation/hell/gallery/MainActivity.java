@@ -3,6 +3,7 @@ package corporation.hell.gallery;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,28 +27,31 @@ public class MainActivity extends AppCompatActivity {
 
     /** The images. */
     private ArrayList<String> images;
+
+    private GridView gallery;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        GridView gallery = (GridView) findViewById(R.id.galleryGridView);
+        gallery = (GridView) findViewById(R.id.galleryGridView);
 
         gallery.setAdapter(new ImageAdapter(this));
 
-        //Setting Click
-        gallery.setOnItemClickListener(new OnItemClickListener() {
+    }
 
-            @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1,
-                                    int position, long arg3) {
-                if (null != images && !images.isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "Images selectd of " + position, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+    // Swarup added
+    public View getGridViewItemByPosition(int position, GridView gridView) {
+        final int firstListItemPosition = gridView.getFirstVisiblePosition();
+        final int lastListItemPosition = firstListItemPosition + gridView.getChildCount() - 1;
 
+        if (position < firstListItemPosition || position > lastListItemPosition ) {
+            return gridView.getAdapter().getView(position, null, gridView);
+        } else {
+            final int childIndex = position - firstListItemPosition;
+            return gridView.getChildAt(childIndex);
+        }
     }
 
     /**
@@ -69,16 +73,28 @@ public class MainActivity extends AppCompatActivity {
             images = getAllShownImagesPath(context);
         }
 
-        public int getCount() {
-            return images.size();
+        public long getItemId(int position) {
+            return position;
         }
 
         public Object getItem(int position) {
             return position;
         }
 
-        public long getItemId(int position) {
+        // Imp should be added
+        @Override
+        public int getItemViewType(int position) {
             return position;
+        }
+
+        // Imp should be added
+        @Override
+        public int getViewTypeCount() {
+            return getCount();
+        }
+
+        public int getCount() {
+            return images.size();
         }
 
         public View getView(final int position, View convertView,
@@ -100,8 +116,25 @@ public class MainActivity extends AppCompatActivity {
                     .placeholder(R.drawable.cert1).centerCrop()
                     .into(picturesView);
 
+            gallery.setOnItemClickListener(new OnItemClickListener() {
+
+                @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+                @Override
+                public void onItemClick(AdapterView<?> arg0, View arg1,
+                                        int position, long arg3) {
+                    if (null != images && !images.isEmpty()) {
+                        Toast.makeText(getApplicationContext(), "Images selectd of " + position, Toast.LENGTH_SHORT).show();
+                        // Swarup added
+                        View view = getGridViewItemByPosition(position, gallery);
+                        view.setBackgroundColor(Color.BLUE);
+                    }
+                }
+            });
+
             return picturesView;
         }
+
+
 
         /**
          * Getting All Images Path.
